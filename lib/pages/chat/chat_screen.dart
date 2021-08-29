@@ -1,3 +1,4 @@
+import 'package:chat/widgets/listcard.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -10,6 +11,17 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      floatingActionButton:  FloatingActionButton(  
+        onPressed: (){},
+        child: Icon(Icons.chat),
+
+      ),
+      body: ListView( 
+        children: [
+          ListCard()
+        ],
+      ),
+    );
   }
 }
