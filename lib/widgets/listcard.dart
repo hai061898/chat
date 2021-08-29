@@ -1,4 +1,5 @@
 import 'package:chat/models/chat_model.dart';
+import 'package:chat/pages/individual/individual_screen.dart';
 import 'package:flutter/material.dart';
 
 class ListCard extends StatelessWidget {
@@ -7,7 +8,10 @@ class ListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        Navigator.push(context,
+              MaterialPageRoute(builder: (context) => IndividualScreen(chat: chat,)));
+      },
       child: Column(children: [
         ListTile(
           leading: CircleAvatar(
