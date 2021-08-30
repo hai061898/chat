@@ -1,5 +1,7 @@
 import 'package:chat/models/chat_model.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class IndividualScreen extends StatefulWidget {
@@ -10,9 +12,25 @@ class IndividualScreen extends StatefulWidget {
 }
 
 class _IndividualScreenState extends State<IndividualScreen> {
+  bool show = false;
+  FocusNode focusNode = FocusNode();
+  TextEditingController controller = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        setState(() {
+          show = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
         leadingWidth: 70,
         leading: InkWell(
@@ -53,44 +71,157 @@ class _IndividualScreenState extends State<IndividualScreen> {
             children: [
               Text(
                 widget.chat!.name!,
-                style: TextStyle(
-                  fontSize: 18.5,
-                  fontWeight: FontWeight.bold
-                ),
+                style: TextStyle(fontSize: 18.5, fontWeight: FontWeight.bold),
               ),
-              Text("Last seen today 12.00",
-              style: TextStyle(  
-                fontSize: 12,
-              ),)
+              Text(
+                "Last seen today 12.00",
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              )
             ],
           ),
         ),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.video_call)),
-          IconButton(onPressed: (){}, icon: Icon(Icons.call)),
-           PopupMenuButton<String>(
-              onSelected: (value) {
-                print(value);
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem(
-                    child: Text("New Group"),
-                    value: "New group",
-                  ),
-                  PopupMenuItem(
-                    child: Text("Message"),
-                    value: "message",
-                  ),
-                  PopupMenuItem(
-                    child: Text("Setting"),
-                    value: "setting",
-                  ),
-                ];
-              },
-            ),
+          IconButton(onPressed: () {}, icon: Icon(Icons.video_call)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.call)),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              print(value);
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: Text("New Group"),
+                  value: "New group",
+                ),
+                PopupMenuItem(
+                  child: Text("Message"),
+                  value: "message",
+                ),
+                PopupMenuItem(
+                  child: Text("Setting"),
+                  value: "setting",
+                ),
+              ];
+            },
+          ),
         ],
       ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: WillPopScope(
+          onWillPop: () {
+            if (show) {
+              setState(() {
+                show = false;
+              });
+            } else {
+              Navigator.pop(context);
+            }
+            return Future.value(false);
+          },
+          child: Stack(
+            children: [
+              ListView(),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width - 60,
+                        child: Card(
+                          margin: EdgeInsets.only(left: 2, right: 2, bottom: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(55),
+                          ),
+                          child: TextFormField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            maxLines: 5,
+                            minLines: 1,
+                            textAlignVertical: TextAlignVertical.center,
+                            keyboardType: TextInputType.multiline,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Chat ....",
+                                prefixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      focusNode.unfocus();
+                                      focusNode.canRequestFocus = false;
+                                      show = !show;
+                                    });
+                                  },
+                                  icon: Icon(Icons.emoji_emotions),
+                                ),
+                                contentPadding: EdgeInsets.all(5),
+                                suffixIcon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.attach_file),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.camera_alt),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(bottom: 8, right: 2, left: 2),
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: IconButton(
+                            icon: Icon(Icons.mic),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  show ? emojipicker() : Container(),
+                ]),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget emojipicker() {
+    return EmojiPicker(
+        config: Config(
+            columns: 7,
+            emojiSizeMax: 32.0,
+            verticalSpacing: 0,
+            horizontalSpacing: 0,
+            initCategory: Category.RECENT,
+            bgColor: Color(0xFFF2F2F2),
+            indicatorColor: Colors.blue,
+            iconColor: Colors.grey,
+            iconColorSelected: Colors.blue,
+            progressIndicatorColor: Colors.blue,
+            showRecentsTab: true,
+            recentsLimit: 28,
+            noRecentsText: "No Recents",
+            noRecentsStyle:
+                const TextStyle(fontSize: 20, color: Colors.black26),
+            categoryIcons: const CategoryIcons(),
+            buttonMode: ButtonMode.MATERIAL),
+        onEmojiSelected: (emoji, category) {
+          print(emoji);
+          setState(() {
+            controller.text = controller.text + emoji.toString();
+          });
+        });
   }
 }

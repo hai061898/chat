@@ -1,5 +1,4 @@
 import 'package:chat/models/chat_model.dart';
-import 'package:chat/pages/individual/individual_screen.dart';
 import 'package:chat/widgets/listcard.dart';
 import 'package:flutter/material.dart';
 
