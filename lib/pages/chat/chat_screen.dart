@@ -2,6 +2,8 @@ import 'package:chat/models/chat_model.dart';
 import 'package:chat/widgets/listcard.dart';
 import 'package:flutter/material.dart';
 
+import '../selectcontact/select_contact.dart';
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
@@ -29,7 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SelectContact()));
         },
         child: Icon(Icons.chat),
       ),
