@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
+import 'package:chat/pages/camera/components/video_screen.dart';
 import 'package:flutter/material.dart';
-
 
 import 'components/camera_view.dart';
 
@@ -16,6 +16,8 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   CameraController? cameraController;
   Future<void>? cameraValue;
+  bool isRecoring = false;
+  bool flash = false;
   @override
   void initState() {
     super.initState();
@@ -59,21 +61,54 @@ class _CameraScreenState extends State<CameraScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              flash = !flash;
+                            });
+                            flash
+                                ? cameraController!
+                                    .setFlashMode(FlashMode.torch)
+                                : cameraController!.setFlashMode(FlashMode.off);
+                          },
                           icon: Icon(
                             Icons.flash_off,
                             color: Colors.white,
                             size: 28,
                           )),
-                      InkWell(
-                        onTap: () {
-                          takePhoto(context);
+                      GestureDetector(
+                        onLongPress: () async {
+                          await cameraController!.startVideoRecording();
+                          setState(() {
+                            isRecoring = true;
+                          });
                         },
-                        child: Icon(
-                          Icons.panorama_fish_eye,
-                          color: Colors.white,
-                          size: 70,
-                        ),
+                        onLongPressUp: () async {
+                          XFile videopath =
+                              await cameraController!.stopVideoRecording();
+                          setState(() {
+                            isRecoring = false;
+                          });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => VideoScreen(
+                                        path: videopath.path,
+                                      )));
+                        },
+                        onTap: () {
+                          if (!isRecoring) takePhoto(context);
+                        },
+                        child: isRecoring
+                            ? Icon(
+                                Icons.radio_button_on,
+                                color: Colors.red,
+                                size: 80,
+                              )
+                            : Icon(
+                                Icons.panorama_fish_eye,
+                                color: Colors.white,
+                                size: 70,
+                              ),
                       ),
                       IconButton(
                           onPressed: () {},
