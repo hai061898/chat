@@ -3,6 +3,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class IndividualScreen extends StatefulWidget {
   const IndividualScreen({Key? key, this.chat}) : super(key: key);
@@ -12,6 +13,7 @@ class IndividualScreen extends StatefulWidget {
 }
 
 class _IndividualScreenState extends State<IndividualScreen> {
+  IO.Socket? socket;
   bool show = false;
   FocusNode focusNode = FocusNode();
   TextEditingController controller = TextEditingController();
@@ -25,6 +27,18 @@ class _IndividualScreenState extends State<IndividualScreen> {
         });
       }
     });
+  }
+
+  void connect() {
+    socket = IO.io("http://192.168.56.1:5000", <String, dynamic>{
+      "transport": ["websocket"],
+      "autoConnect": false,
+    });
+    socket!.connect();
+    socket!.emit("/test", "Hello");
+    socket!.onconnect();
+    print(socket!.connected);
+   
   }
 
   @override
