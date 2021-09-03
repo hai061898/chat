@@ -5,27 +5,15 @@ import 'package:flutter/material.dart';
 import '../selectcontact/select_contact.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({Key? key}) : super(key: key);
-
+  const ChatScreen({Key? key, this.chat,this.chatmodel}) : super(key: key);
+   final List<ChatModel>? chatmodel;
+  final ChatModel? chat;
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<ChatModel> chat = [
-    ChatModel(
-        name: "user 1",
-        isGroup: false,
-        currentMessage: "new play",
-        time: "4:00",
-        icon: "person.png"),
-    ChatModel(
-        name: "user 1",
-        isGroup: false,
-        currentMessage: "new play",
-        time: "4:00",
-        icon: "person.png"),
-  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +25,10 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Icon(Icons.chat),
       ),
       body: ListView.builder(
-        itemCount: chat.length,
-        itemBuilder: (context, index) => ListCard(chat: chat[index]),
+        itemCount: widget.chatmodel!.length,
+        itemBuilder: (context, index) => ListCard(
+          chat: widget.chatmodel![index]
+        ),
       ),
     );
   }

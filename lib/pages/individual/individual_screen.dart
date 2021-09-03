@@ -6,14 +6,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class IndividualScreen extends StatefulWidget {
-  const IndividualScreen({Key? key, this.chat}) : super(key: key);
-  final ChatModel? chat;
+  const IndividualScreen({Key? key, this.chat,this.sourchat}) : super(key: key);
+  final ChatModel? chat, sourchat;
   @override
   _IndividualScreenState createState() => _IndividualScreenState();
 }
 
 class _IndividualScreenState extends State<IndividualScreen> {
   IO.Socket? socket;
+  bool sendButton = false;
   bool show = false;
   FocusNode focusNode = FocusNode();
   TextEditingController controller = TextEditingController();

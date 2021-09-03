@@ -1,6 +1,6 @@
 import 'package:chat/models/chat_model.dart';
 import 'package:chat/pages/new%20group/group_screen.dart';
-import 'package:chat/pages/selectcontact/components/button_card.dart';
+import 'package:chat/widgets/button_card.dart';
 import 'package:chat/widgets/contact_card.dart';
 import 'package:flutter/material.dart';
 
