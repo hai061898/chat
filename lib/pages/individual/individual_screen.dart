@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import 'components/OwnMessgaeCrad.dart';
+import 'components/ReplyCard.dart';
+
 class IndividualScreen extends StatefulWidget {
   const IndividualScreen({Key? key, this.chat,this.sourchat}) : super(key: key);
   final ChatModel? chat, sourchat;
@@ -139,7 +142,13 @@ class _IndividualScreenState extends State<IndividualScreen> {
           },
           child: Stack(
             children: [
-              ListView(),
+              ListView(
+                shrinkWrap: true,
+                children: [
+                  OwnMessageCard(),
+                  ReplyCard(),
+                ],               
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Column(children: [
